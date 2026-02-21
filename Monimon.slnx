@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Monimon.Dashboard/Monimon.Dashboard.csproj" />
+  <Project Path="Monimon.Logic/Monimon.Logic.fsproj" Id="4f7464aa-d5df-48f2-b37d-4dcea430f5fd" />
+</Solution>

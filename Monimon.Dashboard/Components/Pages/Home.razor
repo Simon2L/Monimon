@@ -1,0 +1,71 @@
+﻿@page "/"
+@using Monimon.Logic
+
+<PageTitle>Home</PageTitle>
+
+<MudText Class="mt-4" Typo="Typo.h4" GutterBottom="true">@CpuTemperature</MudText>
+
+<MudTable Items="GetProperties()" Hover="true" Breakpoint="Breakpoint.Sm">
+    <HeaderContent>
+        <MudTh>Value</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.Key</MudTd>
+        <MudTd>@context.Value</MudTd>
+    </RowTemplate>
+</MudTable>
+
+<ServiceCard ProjectName="Cloudflare"></ServiceCard>
+
+
+@code {
+
+    private Dictionary<string, string> GetProperties()
+    {
+        return new Dictionary<string, string>
+        {
+            { "Machine Name", Environment.MachineName },
+            { "OS Version", Environment.OSVersion.ToString() },
+            { "Processor Count", Environment.ProcessorCount.ToString() },
+            { "System Directory", Environment.SystemDirectory },
+            { "User Domain Name", Environment.UserDomainName },
+            { "User Name", Environment.UserName },
+            { "Is 64 Bit OS", Environment.Is64BitOperatingSystem.ToString() },
+            { "Is 64 Bit Process", Environment.Is64BitProcess.ToString() },
+        };
+    }
+
+    private string CpuTemperature = "";
+
+    Timer? timer;
+    protected override void OnInitialized()
+    {
+        timer = new Timer(async _ =>
+        {
+            var temp = Hardware.getTemp(0);
+            CpuTemperature = temp.HasValue ? $"{temp.Value} °C" : "N/A";
+            await InvokeAsync(StateHasChanged);
+        }, null, 0, 10000);
+    }
+
+    private string GetStatusText(ProjectStatus status) => status switch
+    {
+        ProjectStatus.Active a => $"Running (Up: {a.uptime})",
+        ProjectStatus.Inactive i => "Stopped",
+        ProjectStatus.Failed f => $"Error: {f.error}",
+        _ => "Unknown"
+    };
+
+    private Color GetStatusColor(ProjectStatus status) => status switch
+    {
+        ProjectStatus.Active => Color.Success,
+        ProjectStatus.Inactive i => Color.Surface,
+        ProjectStatus.Failed => Color.Error,
+        _ => Color.Default
+    };
+
+    public void Dispose()
+    {
+        timer?.Dispose();
+    }
+}

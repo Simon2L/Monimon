@@ -1,0 +1,32 @@
+﻿@using Monimon.Logic
+
+<MudCard Elevation="4" Class="pa-4">
+    <MudText Typo="Typo.h6">@ProjectName</MudText>
+    <MudStack Row="true" AlignItems="AlignItems.Center">
+        <MudChip T="string" Color="@(IsRunning? Color.Success: Color.Error)">
+            @(IsRunning ? "Active" : "Stopped")
+        </MudChip>
+        <MudSpacer />
+        <MudSwitch T="bool" Value="IsRunning" ValueChanged="HandleToggle" Color="Color.Primary" />
+    </MudStack>
+</MudCard>
+
+@code {
+    [Parameter] public string ProjectName { get; set; } = "";
+    private bool IsRunning;
+
+    protected override void OnInitialized() => CheckStatus();
+
+    private void CheckStatus()
+    {
+        // Run: systemctl is-active ProjectName
+        // Update IsRunning bool
+    }
+
+    private void HandleToggle(bool newVal)
+    {
+        // Run ToggleService logic here
+        // bool success = Services.control(newVal ? "start" : "stop", "my-project");
+        IsRunning = newVal;
+    }
+}
