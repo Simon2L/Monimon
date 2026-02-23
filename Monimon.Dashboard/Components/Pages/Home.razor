@@ -5,11 +5,12 @@
 
 <MudText Class="mt-4" Typo="Typo.h4" GutterBottom="true">@CpuTemperature</MudText>
 
-<ServiceCard ProjectName="Cloudflare"></ServiceCard>
+<ServiceCard ProjectName="pi-python"></ServiceCard>
 
 
 @code {
     private string CpuTemperature = "";
+    private List<string> ProjectNames = ["pi-python", "safesite"];
 
     Timer? timer;
     protected override void OnInitialized()
