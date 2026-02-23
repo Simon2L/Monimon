@@ -1,32 +1,48 @@
 ﻿@using Monimon.Logic
 
-<MudCard Elevation="4" Class="pa-4">
+<MudCard Elevation="4" Class="pa-4 mb-4">
     <MudText Typo="Typo.h6">@ProjectName</MudText>
     <MudStack Row="true" AlignItems="AlignItems.Center">
         <MudChip T="string" Color="@(IsRunning? Color.Success: Color.Error)">
             @(IsRunning ? "Active" : "Stopped")
         </MudChip>
         <MudSpacer />
-        <MudSwitch T="bool" Value="IsRunning" ValueChanged="HandleToggle" Color="Color.Primary" />
+        @* We use Value and ValueChanged for manual control *@
+        <MudSwitch T="bool"
+                   Value="IsRunning"
+                   ValueChanged="HandleToggle"
+                   Color="Color.Primary" />
     </MudStack>
 </MudCard>
 
 @code {
     [Parameter] public string ProjectName { get; set; } = "";
+
     private bool IsRunning;
+    private Func<string, bool>? _controller;
 
-    protected override void OnInitialized() => CheckStatus();
-
-    private void CheckStatus()
+    protected override void OnInitialized()
     {
-        // Run: systemctl is-active ProjectName
-        // Update IsRunning bool
+        _controller = ServiceFactory.createController(ProjectName);
+
+        // Initial state check - You'll want to replace the mockup
+        // with the real systemctl check later
+        var status = Projects.getStatus(ProjectName);
+        IsRunning = status.IsActive;
     }
 
-    private void HandleToggle(bool newVal)
+    private async Task HandleToggle(bool toggledOn)
     {
-        // Run ToggleService logic here
-        // bool success = Services.control(newVal ? "start" : "stop", "my-project");
-        IsRunning = newVal;
+        if (_controller == null) return;
+
+        string action = toggledOn ? "start" : "stop";
+        bool success = _controller(action);
+
+        if (success)
+        {
+            IsRunning = toggledOn;
+            // Force UI update
+            StateHasChanged();
+        }
     }
 }

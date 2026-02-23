@@ -5,36 +5,10 @@
 
 <MudText Class="mt-4" Typo="Typo.h4" GutterBottom="true">@CpuTemperature</MudText>
 
-<MudTable Items="GetProperties()" Hover="true" Breakpoint="Breakpoint.Sm">
-    <HeaderContent>
-        <MudTh>Value</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd>@context.Key</MudTd>
-        <MudTd>@context.Value</MudTd>
-    </RowTemplate>
-</MudTable>
-
 <ServiceCard ProjectName="Cloudflare"></ServiceCard>
 
 
 @code {
-
-    private Dictionary<string, string> GetProperties()
-    {
-        return new Dictionary<string, string>
-        {
-            { "Machine Name", Environment.MachineName },
-            { "OS Version", Environment.OSVersion.ToString() },
-            { "Processor Count", Environment.ProcessorCount.ToString() },
-            { "System Directory", Environment.SystemDirectory },
-            { "User Domain Name", Environment.UserDomainName },
-            { "User Name", Environment.UserName },
-            { "Is 64 Bit OS", Environment.Is64BitOperatingSystem.ToString() },
-            { "Is 64 Bit Process", Environment.Is64BitProcess.ToString() },
-        };
-    }
-
     private string CpuTemperature = "";
 
     Timer? timer;

@@ -21,7 +21,6 @@ module Services =
         p.WaitForExit()
         p.ExitCode = 0
 
-
 type ProjectStatus = 
     | Active of uptime: string
     | Inactive of inactive: string
@@ -33,3 +32,11 @@ module Projects =
         // For now, a mock-up:
         if name = "Cloudflare" then Active "2 days"
         else Inactive "inactive"
+
+module ServiceFactory =
+    
+    let createController serviceName =
+        // We explicitly cast to a System.Func so C# recognizes it
+        Func<string, bool>(fun action -> 
+            Services.control action serviceName
+        )
