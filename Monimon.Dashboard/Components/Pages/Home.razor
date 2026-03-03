@@ -5,8 +5,10 @@
 
 <MudText Class="mt-4" Typo="Typo.h4" GutterBottom="true">@CpuTemperature</MudText>
 
-<ServiceCard ProjectName="pi-python"></ServiceCard>
-
+@foreach(var project in ProjectNames)
+{
+    <ServiceCard ProjectName="pi-python"></ServiceCard>
+}
 
 @code {
     private string CpuTemperature = "";

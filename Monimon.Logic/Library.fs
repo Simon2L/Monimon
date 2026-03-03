@@ -40,3 +40,9 @@ module ServiceFactory =
         Func<string, bool>(fun action -> 
             Services.control action serviceName
         )
+// TODOS: 
+// Status for SERVICES,
+// Some Graph for uptime - visitors - requests
+// Log flow - view real time logs and filter it.
+// More PI stat - Memory - Performance and so on.
+// Discord BOT integration :D
